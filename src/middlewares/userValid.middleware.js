@@ -7,10 +7,6 @@ export function userValid(req, res, next) {
 
   if (error) return res.sendStatus(401);
 
-  const passwordsAreEquals = user.password === user.confirmPassword;
-
-  if (!passwordsAreEquals) return res.sendStatus(401);
-
   delete user.confirmPassword;
   user.password = bcrypt.hashSync(user.password, 10);
 
