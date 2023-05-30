@@ -19,6 +19,23 @@ export function findUserByEmailOrUsername(email, username) {
   return result;
 }
 
+export function findUserByEmail(email) {
+  const result = db.query(
+    `
+    SELECT
+      *
+    FROM
+      users
+    WHERE
+      email = $1
+    ;
+  `,
+    [email]
+  );
+
+  return result;
+}
+
 export function insertUser({ email, password, username, picture_url }) {
   return db.query(
     `
