@@ -8,5 +8,6 @@ const router = express.Router();
 
 router.post("/signup", userValid, userExistByEmailOrUsername, signUp);
 router.post("/", loginValid, signIn);
+router.get("/user/:id", authValidate, )
 
 export default router;
