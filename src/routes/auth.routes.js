@@ -4,9 +4,9 @@ import { userExistByEmailOrUsername } from "../middlewares/userExistByEmailOrUse
 import { signIn, signUp } from "../controllers/auth.controller.js";
 import { loginValid } from "../middlewares/loginValid.middleware.js";
 
-const router = express.Router();
+const authRouter = express.Router();
 
-router.post("/signup", userValid, userExistByEmailOrUsername, signUp);
-router.post("/", loginValid, signIn);
+authRouter.post("/signup", userValid, userExistByEmailOrUsername, signUp);
+authRouter.post("/", loginValid, signIn);
 
-export default router;
+export default authRouter;
