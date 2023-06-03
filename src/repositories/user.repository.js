@@ -48,3 +48,14 @@ export function insertUser({ email, password, username, picture_url }) {
     [email, password, username, picture_url]
   );
 }
+
+export function ListPostsUser(id) {
+  return db.query(
+    `
+      SELECT users.username, users.picture_url, posts.description, posts.url
+      FROM users
+      JOIN posts ON users.id = posts.user_id
+      WHERE users.id = ${id};
+    `
+  ); 
+}
