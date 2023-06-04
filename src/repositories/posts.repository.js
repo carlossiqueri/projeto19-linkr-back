@@ -11,10 +11,10 @@ export function createPost(url, description, user_id) {
 
 export function getPostsDB() {
   return db.query(`
-  SELECT * FROM posts
+  SELECT posts.*, users.username, users.picture_url AS user_picture
+  FROM users
+  JOIN posts ON users.id = user_id
   ORDER BY id DESC
-  LIMIT 20
-  `);
+  LIMIT 20;
+  `, []);
 }
-
-
