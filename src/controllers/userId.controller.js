@@ -1,8 +1,8 @@
-import { ListPostsUser } from "../repositories/user.repository.js"
+import { ListPostsUser, ListSearch } from "../repositories/user.repository.js"
 
 export async function userId(req, res) {
   const id = req.params.id
-  console.log(id)
+  console.log("user-id: " +id)
 
   try {
     const result = await ListPostsUser(id)
@@ -12,6 +12,14 @@ export async function userId(req, res) {
   }
 }
 
-export async function SearchUser(req,res){
-    
+export async function ListSearchUser(req,res){
+    const { searchValue} = req.body
+
+    try{
+      const consult = await ListSearch(searchValue)
+      res.send(consult.rows).status(200)
+    }
+    catch(err){
+      res.send(err.message).status(500)
+    }
 }

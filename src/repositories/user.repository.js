@@ -59,3 +59,15 @@ export function ListPostsUser(id) {
     `
   ); 
 }
+
+export function ListSearch(searchValue){
+  return db.query(
+    `
+    SELECT id, username, picture_url
+    FROM users
+    WHERE LOWER(username) LIKE '${searchValue}%'
+    ORDER BY RANDOM()
+    LIMIT 10;
+    `
+  )
+}
