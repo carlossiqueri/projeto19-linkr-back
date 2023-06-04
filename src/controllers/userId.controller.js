@@ -13,7 +13,7 @@ export async function userId(req, res) {
 }
 
 export async function ListSearchUser(req,res){
-    const { searchValue} = req.body
+    const { searchValue } = req.body
 
     try{
       const consult = await ListSearch(searchValue)
