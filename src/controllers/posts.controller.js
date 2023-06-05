@@ -7,6 +7,7 @@ import {
 } from "../repositories/posts.repository.js";
 import urlMetadata from "url-metadata";
 import fetch from "node-fetch";
+import { db } from "../config/database.js";
 global.fetch = fetch;
 
 export async function newPost(req, res) {
