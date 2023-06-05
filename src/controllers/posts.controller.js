@@ -14,7 +14,8 @@ export async function newPost(req, res) {
   const { user_id } = res.locals;
   const hashtag = description.split(" ").filter((h) => h.startsWith("#"));
 
-  // A partir daqui, enquanto eu fazia esta feature, apenas eu e Deus sabíamos o que se passava no código.
+  // A quem for trabalhar no código a partir daqui:
+  // Enquanto eu fazia esta feature, apenas eu e Deus sabíamos o que se passava no código.
   // Agora, apenas Deus sabe.
   // Boa sorte.
   // - Days
