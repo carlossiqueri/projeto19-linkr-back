@@ -58,7 +58,7 @@ export async function timeline(req, res) {
 
     for (let i = 0; i < timelinePosts.rows.length; i++) {
       const obj = timelinePosts.rows[i];
-      if (obj.liked_by && Array.isArray(obj.liked_by) && obj.liked_by.includes(variable)) {
+      if (obj.liked_by && Array.isArray(obj.liked_by) && obj.liked_by.includes(username)) {
         obj.isLiked = true;
       } else {
         obj.isLiked = false;
