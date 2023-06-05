@@ -69,10 +69,10 @@ export function getHashtagsDB() {
   `);
 }
 
-export function deletePost(id, user_id){
+export function deletePost(id){
   return db.query(`
-  DELETE FROM posts WHERE id=$1 AND "user_id"=$2;
-  `, [id, user_id]);
+  DELETE FROM posts WHERE id=$1;
+  `, [id]);
 }
 
 export function updatePost(url, description, id, user_id){

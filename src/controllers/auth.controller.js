@@ -20,6 +20,7 @@ export async function signUp(req, res) {
 }
 
 export async function signIn(req, res) {
+
   try {
     const { email, password } = req.user;
     const userByEmail = await findUserByEmail(email);
