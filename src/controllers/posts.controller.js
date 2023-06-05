@@ -6,6 +6,7 @@ import { createPost,
   insert_posts_hashtagsDB, } from "../repositories/posts.repository.js";
 import urlMetadata from "url-metadata";
 import fetch from "node-fetch";
+import { db } from "../config/database.js";
 global.fetch = fetch;
 
 export async function newPost(req, res) {
@@ -57,7 +58,7 @@ export async function timeline(req, res) {
 
     for (let i = 0; i < timelinePosts.rows.length; i++) {
       const obj = timelinePosts.rows[i];
-      if (obj.liked_by && Array.isArray(obj.liked_by) && obj.liked_by.includes(variable)) {
+      if (obj.liked_by && Array.isArray(obj.liked_by) && obj.liked_by.includes(username)) {
         obj.isLiked = true;
       } else {
         obj.isLiked = false;
