@@ -11,7 +11,7 @@ global.fetch = fetch;
 
 export async function newPost(req, res) {
   const { url, description } = req.body;
-  const { user_id } = res.locals;
+  const { id: user_id } = res.locals.user;
   const hashtag = description.split(" ").filter((h) => h.startsWith("#"));
 
   // A quem for trabalhar no código a partir daqui:
@@ -49,8 +49,21 @@ export async function newPost(req, res) {
 }
 
 export async function timeline(req, res) {
+  const { username } = res.locals.user
+
   try {
     const timelinePosts = await getPostsDB();
+
+    // verifica se o usuario logado deu like em alguma das postagens
+
+    for (let i = 0; i < timelinePosts.rows.length; i++) {
+      const obj = timelinePosts.rows[i];
+      if (obj.liked_by && Array.isArray(obj.liked_by) && obj.liked_by.includes(variable)) {
+        obj.isLiked = true;
+      } else {
+        obj.isLiked = false;
+      }
+    }
 
     res.status(200).send(timelinePosts.rows);
   } catch (err) {
@@ -69,7 +82,7 @@ export async function getTimelineHashtags(req, res) {
 }
 
 export async function likePost(req, res) {
-  const { user_id } = res.locals
+  const { id: user_id } = res.locals
   const { id } = req.params
 
   try {

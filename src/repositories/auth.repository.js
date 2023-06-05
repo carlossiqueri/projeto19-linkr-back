@@ -14,5 +14,5 @@ export async function createSession(token, user_id) {
 }
 
 export async function findSession(token){
-  return db.query(`SELECT "user_id" FROM sessions WHERE token=$1;`, [token]);
+  return db.query(`SELECT * FROM sessions WHERE token=$1;`, [token]);
 }

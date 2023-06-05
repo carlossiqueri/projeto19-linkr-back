@@ -6,7 +6,8 @@ import { validateAuth } from "../middlewares/validateAuth.middleware.js";
 
 const postRouter = Router();
 postRouter.post("/newPost", validateAuth, validateSchema(postSchema), newPost);
-postRouter.get("/posts", timeline);
+postRouter.get("/posts", validateAuth, timeline);
+postRouter.post("/posts/like/:id", validateAuth, likePost);
 postRouter.post("/posts/like/:id", validateAuth, likePost);
 postRouter.get("/hashtags", getTimelineHashtags);
 
