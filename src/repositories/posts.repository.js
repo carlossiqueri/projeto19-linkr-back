@@ -16,11 +16,9 @@ export function createPost(url, description, user_id, urlMeta, url_picture) {
   );
 }
 
-
-
 export function getPostsDB() {
   return db.query(
-`
+    `
 SELECT posts.*, u.username, u.picture_url AS user_picture
 FROM posts
 JOIN users AS u ON u.id = posts.user_id
@@ -46,4 +44,11 @@ export function insert_posts_hashtagsDB(hashtag_id, post_id) {
     `,
     [hashtag_id, post_id]
   );
+}
+
+export function getHashtagsDB() {
+  return db.query(`
+  SELECT hashtag_name, COUNT(hashtag_name) AS hashtag_occurrence
+  FROM hashtags GROUP BY hashtag_name ORDER BY hashtag_occurrence DESC;
+  `);
 }
