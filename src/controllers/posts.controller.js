@@ -1,5 +1,6 @@
 import {
   createPost,
+  getHashtagsDB,
   getPostsDB,
   insertHashtagDB,
   insert_posts_hashtagsDB,
@@ -12,6 +13,11 @@ export async function newPost(req, res) {
   const { url, description } = req.body;
   const { user_id } = res.locals;
   const hashtag = description.split(" ").filter((h) => h.startsWith("#"));
+
+  // A partir daqui, enquanto eu fazia esta feature, apenas eu e Deus sabíamos o que se passava no código.
+  // Agora, apenas Deus sabe.
+  // Boa sorte.
+  // - Days
 
   // URL => Link metadata
   try {
@@ -33,11 +39,7 @@ export async function newPost(req, res) {
         hashtag_result.rows[0].id,
         result.id
       );
-
-
     }
-
-
 
     res.status(201).send(result);
   } catch (err) {
@@ -50,6 +52,16 @@ export async function timeline(req, res) {
     const timelinePosts = await getPostsDB();
 
     res.status(200).send(timelinePosts.rows);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
+
+export async function getTimelineHashtags(req, res) {
+  try {
+    const timelineHashtag = await getHashtagsDB();
+
+    res.status(200).send(timelineHashtag.rows);
   } catch (err) {
     res.status(500).send(err.message);
   }
