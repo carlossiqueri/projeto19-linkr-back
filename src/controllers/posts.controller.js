@@ -11,7 +11,7 @@ global.fetch = fetch;
 
 export async function newPost(req, res) {
   const { url, description } = req.body;
-  const { user_id } = res.locals;
+  const { id: user_id } = res.locals.user;
   const hashtag = description.split(" ").filter((h) => h.startsWith("#"));
 
   // A quem for trabalhar no código a partir daqui:
@@ -49,8 +49,21 @@ export async function newPost(req, res) {
 }
 
 export async function timeline(req, res) {
+  const { username } = res.locals.user
+
   try {
     const timelinePosts = await getPostsDB();
+
+    // verifica se o usuario logado deu like em alguma das postagens
+
+    for (let i = 0; i < timelinePosts.rows.length; i++) {
+      const obj = timelinePosts.rows[i];
+      if (obj.liked_by && Array.isArray(obj.liked_by) && obj.liked_by.includes(variable)) {
+        obj.isLiked = true;
+      } else {
+        obj.isLiked = false;
+      }
+    }
 
     res.status(200).send(timelinePosts.rows);
   } catch (err) {
@@ -66,4 +79,32 @@ export async function getTimelineHashtags(req, res) {
   } catch (err) {
     res.status(500).send(err.message);
   }
+}
+
+export async function likePost(req, res) {
+  const { id: user_id } = res.locals
+  const { id } = req.params
+
+  try {
+
+    const isFollowing = await db.query(`
+            SELECT * FROM likes WHERE "user_id" = $1 AND "post_id" = $2
+        `, [user_id, id])
+
+        if(isFollowing.rowCount < 1) {
+            await db.query(`
+            INSERT INTO likes ("user_id", "post_id") VALUES ($1, $2)
+            `, [user_id, id])
+
+            return res.sendStatus(201)
+        }
+
+        await db.query(`
+          DELETE FROM likes WHERE "user_id" = $1 AND "post_id" = $2
+        `, [user_id, id])
+
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+
 }
