@@ -41,7 +41,7 @@ export async function newPost(req, res) {
 
     res.status(201).send(result);
   } catch (err) {
-    res.status(500).send(err.message);
+    res.status(500).send(err);
   }
 }
 
