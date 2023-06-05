@@ -82,7 +82,7 @@ export async function getTimelineHashtags(req, res) {
 }
 
 export async function likePost(req, res) {
-  const { id: user_id } = res.locals
+  const { id: user_id } = res.locals.user
   const { id } = req.params
 
   try {

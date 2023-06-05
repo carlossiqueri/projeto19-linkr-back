@@ -1,3 +1,4 @@
+import { db } from "../config/database.js";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
 import {
@@ -46,4 +47,20 @@ export async function signIn(req, res) {
     console.log(err);
     return res.sendStatus(500);
   }
+}
+
+export async function signOut(req, res) {
+
+  try {
+
+    const sessions = await db.query(`
+      SELECT * FROM likes
+    `)
+    return res.status(201).send(sessions.rows)
+    
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(500);
+  }
+
 }
