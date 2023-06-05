@@ -68,3 +68,16 @@ export function getHashtagsDB() {
   FROM hashtags GROUP BY hashtag_name ORDER BY hashtag_occurrence DESC;
   `);
 }
+
+export function deletePost(id){
+  return db.query(`
+  DELETE FROM posts WHERE id=$1;
+  `, [id]);
+}
+
+export function updatePost(url, description, id, user_id){
+  return db.query(`
+  UPDATE posts SET url=$1, description=$2
+  WHERE id=$3 AND "user_id"=$4;
+  `, [url, description, id, user_id]);
+}

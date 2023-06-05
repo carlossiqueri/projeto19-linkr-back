@@ -1,10 +1,9 @@
-import {
-  createPost,
+import { createPost,
+  updatePost,
   getHashtagsDB,
   getPostsDB,
   insertHashtagDB,
-  insert_posts_hashtagsDB,
-} from "../repositories/posts.repository.js";
+  insert_posts_hashtagsDB, } from "../repositories/posts.repository.js";
 import urlMetadata from "url-metadata";
 import fetch from "node-fetch";
 import { db } from "../config/database.js";
@@ -108,4 +107,30 @@ export async function likePost(req, res) {
     res.status(500).send(err.message);
   }
 
+}
+
+export async function deletePostById(req, res){
+  // const {user_id} = res.locals;
+  const {id} = req.params;
+  try{
+    await deletePost(id );
+    res.sendStatus(204);
+
+  }catch(err){
+    res.status(500).send(err.message);
+  }
+}
+
+export async function updatePostById(req, res){
+  const {id} = req.params;
+  const {user_id} = res.locals;
+  const { url, description } = req.body;
+
+  try{
+    await updatePost(url, description, id, user_id);
+    res.sendStatus(200);
+
+  } catch(err){
+    res.status(500).send(err.message);
+  }
 }
