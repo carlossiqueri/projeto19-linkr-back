@@ -31,3 +31,31 @@ export async function timeline(req, res) {
     res.status(500).send(err.message);
   }
 }
+
+export async function likePost(req, res) {
+  const { user_id } = res.locals
+  const { id } = req.params
+
+  try {
+
+    const isFollowing = await db.query(`
+            SELECT * FROM likes WHERE "user_id" = $1 AND "post_id" = $2
+        `, [user_id, id])
+
+        if(isFollowing.rowCount < 1) {
+            await db.query(`
+            INSERT INTO likes ("user_id", "post_id") VALUES ($1, $2)
+            `, [user_id, id])
+
+            return res.sendStatus(201)
+        }
+
+        await db.query(`
+          DELETE FROM likes WHERE "user_id" = $1 AND "post_id" = $2
+        `, [user_id, id])
+
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+
+}
