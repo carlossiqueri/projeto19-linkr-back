@@ -112,6 +112,7 @@ export async function likePost(req, res) {
 
 }
 
+
 export async function deletePostById(req, res){
   const {id: post_id} = req.params;
   const {id: user_id} = res.locals.user;
@@ -141,3 +142,4 @@ export async function updatePostById(req, res){
     res.status(500).send(err.message);
   }
 }
+
