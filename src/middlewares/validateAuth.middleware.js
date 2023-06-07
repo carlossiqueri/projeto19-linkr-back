@@ -11,12 +11,11 @@ export async function validateAuth(req, res, next){
         if(sessions.rowCount === 0) return res.sendStatus(401);
 
         const { rows: users } = await db.query(`
-        SELECT * FROM users WHERE id=$1
+        SELECT * FROM users WHERE id=$1;
         `, [sessions.rows[0].user_id])
 
 
         res.locals.user = users[0]
-
         next();
     } catch(err){
         res.status(500).send(err.message);

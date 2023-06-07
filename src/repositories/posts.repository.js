@@ -27,6 +27,7 @@ export function getPostsDB() {
       JOIN likes ON users.id = likes.user_id
       WHERE likes.post_id = posts.id
     ) AS liked_by,
+    users.username,
     users.picture_url AS user_picture,
     (
       SELECT COUNT(*)
@@ -69,15 +70,28 @@ export function getHashtagsDB() {
   `);
 }
 
-export function deletePost(id){
+export function deleteHashtags(post_id){
   return db.query(`
-  DELETE FROM posts WHERE id=$1;
-  `, [id]);
+  DELETE FROM posts_hashtags WHERE "post_id"=$1;
+  `, [post_id]);
 }
 
-export function updatePost(url, description, id, user_id){
+export function deleteLikes(post_id){
   return db.query(`
-  UPDATE posts SET url=$1, description=$2
-  WHERE id=$3 AND "user_id"=$4;
-  `, [url, description, id, user_id]);
+ DELETE FROM likes WHERE "post_id"=$1;
+  `,[post_id]);
+}
+
+export function deletePost(id, user_id){
+ 
+  return db.query(`
+  DELETE FROM posts WHERE id=$1 AND "user_id"=$2;
+  `, [id, user_id]);
+}
+
+export function updatePost( description, id, user_id){
+  return db.query(`
+  UPDATE posts SET description=$1
+  WHERE id=$2 AND "user_id"=$3;
+  `, [ description, id, user_id]);
 }

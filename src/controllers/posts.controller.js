@@ -3,7 +3,10 @@ import { createPost,
   getHashtagsDB,
   getPostsDB,
   insertHashtagDB,
-  insert_posts_hashtagsDB, } from "../repositories/posts.repository.js";
+  insert_posts_hashtagsDB,
+  deletePost, 
+  deleteLikes,
+  deleteHashtags} from "../repositories/posts.repository.js";
 import urlMetadata from "url-metadata";
 import fetch from "node-fetch";
 import { db } from "../config/database.js";
@@ -110,10 +113,14 @@ export async function likePost(req, res) {
 }
 
 export async function deletePostById(req, res){
-  // const {user_id} = res.locals;
-  const {id} = req.params;
+  const {id: post_id} = req.params;
+  const {id: user_id} = res.locals.user;
+
+  
   try{
-    await deletePost(id );
+    await deleteHashtags(post_id);
+    await deleteLikes(post_id);
+    await deletePost(post_id, user_id);
     res.sendStatus(204);
 
   }catch(err){
@@ -123,11 +130,11 @@ export async function deletePostById(req, res){
 
 export async function updatePostById(req, res){
   const {id} = req.params;
-  const {user_id} = res.locals;
-  const { url, description } = req.body;
+  const {id :user_id} = res.locals.user;
+  const { description } = req.body;
 
   try{
-    await updatePost(url, description, id, user_id);
+    await updatePost( description, id, user_id);
     res.sendStatus(200);
 
   } catch(err){
