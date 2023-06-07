@@ -42,7 +42,7 @@ export async function signIn(req, res) {
 
     await createSession(token, user_id);
 
-    res.send({ token });
+    res.send({ token, userId: user_id });
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);
