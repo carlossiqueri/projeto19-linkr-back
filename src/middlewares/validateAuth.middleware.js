@@ -16,6 +16,7 @@ export async function validateAuth(req, res, next){
 
 
         res.locals.user = users[0]
+        console.log(res.locals.user);
         next();
     } catch(err){
         res.status(500).send(err.message);

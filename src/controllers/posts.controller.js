@@ -11,6 +11,8 @@ import {
   insertComment,
   getAllComments,
   getNumberOfPostsDB,
+  existRepost,
+  startRepost
 } from "../repositories/posts.repository.js";
 import urlMetadata from "url-metadata";
 import fetch from "node-fetch";
@@ -143,6 +145,7 @@ export async function likePost(req, res) {
   }
 }
 
+
 export async function deletePostById(req, res) {
   const { id: post_id } = req.params;
   const { id: user_id } = res.locals.user;
@@ -191,4 +194,20 @@ export async function getComments(req, res) {
     res.status(500).send(err.message);
   }
 };
+
+export async function reposts(req, res){
+  const {id} = req.params;
+  const { id: user_id} = res.locals.user;
+  
+  try{
+    const alreadyReposts = await existRepost(id, user_id);
+    if(alreadyReposts.rowCount === 0){
+      await startRepost(id, user_id);
+      return res.sendStatus(201);
+    }
+    
+  } catch(err){
+    res.status(500).send(err.message);
+  }
+}
 

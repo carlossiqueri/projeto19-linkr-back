@@ -149,3 +149,15 @@ export function getAllComments(post_id) {
 
   return result;
 }
+
+export function existRepost(post_id, user_id){
+  return db.query(`
+  SELECT * FROM reposts WHERE "post_id"=$1 AND "user_id"=$2;
+  `, [post_id, user_id]);
+}
+
+export function startRepost(post_id, user_id){
+ return db.query(`
+ INSERT INTO reposts ("post_id", "user_id") VALUES ($1, $2);
+ `, [post_id, user_id]);
+}
