@@ -6,7 +6,10 @@ import { createPost,
   insert_posts_hashtagsDB,
   deletePost, 
   deleteLikes,
-  deleteHashtags} from "../repositories/posts.repository.js";
+  deleteHashtags,
+  existRepost,
+  startRepost
+} from "../repositories/posts.repository.js";
 import urlMetadata from "url-metadata";
 import fetch from "node-fetch";
 import { db } from "../config/database.js";
@@ -112,7 +115,6 @@ export async function likePost(req, res) {
 
 }
 
-
 export async function deletePostById(req, res){
   const {id: post_id} = req.params;
   const {id: user_id} = res.locals.user;
@@ -138,6 +140,22 @@ export async function updatePostById(req, res){
     await updatePost( description, id, user_id);
     res.sendStatus(200);
 
+  } catch(err){
+    res.status(500).send(err.message);
+  }
+}
+
+export async function reposts(req, res){
+  const {id} = req.params;
+  const { id: user_id} = res.locals.user;
+  
+  try{
+    const alreadyReposts = await existRepost(id, user_id);
+    if(alreadyReposts.rowCount === 0){
+      await startRepost(id, user_id);
+      return res.sendStatus(201);
+    }
+    
   } catch(err){
     res.status(500).send(err.message);
   }
