@@ -6,6 +6,7 @@ import {
   getTimelineHashtags,
   updatePostById,
   deletePostById,
+  getTimelineCount,
   postComment,
   getComments,
 } from "../controllers/posts.controller.js";
@@ -27,5 +28,6 @@ postRouter.post(
   postComment
 );
 postRouter.get("/comments/:postId", validateAuth, getComments);
+postRouter.get("/postsCount", getTimelineCount);
 
 export default postRouter;

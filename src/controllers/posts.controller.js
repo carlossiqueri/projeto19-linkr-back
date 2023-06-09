@@ -10,6 +10,7 @@ import {
   deleteHashtags,
   insertComment,
   getAllComments,
+  getNumberOfPostsDB,
 } from "../repositories/posts.repository.js";
 import urlMetadata from "url-metadata";
 import fetch from "node-fetch";
@@ -79,6 +80,16 @@ export async function timeline(req, res) {
     }
 
     res.status(200).send(timelinePosts.rows);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
+
+export async function getTimelineCount(req, res) {
+  try {
+    const timelineCount = await getNumberOfPostsDB();
+    const count = parseInt(timelineCount.rows[0].count)
+    res.status(200).send(`${count}`)
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -175,4 +186,5 @@ export async function getComments(req, res) {
   } catch (err) {
     res.status(500).send(err.message);
   }
-}
+};
+
