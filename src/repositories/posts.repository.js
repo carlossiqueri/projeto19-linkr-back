@@ -45,6 +45,13 @@ export function getPostsDB() {
   );
 }
 
+
+export function getNumberOfPostsDB(){
+  return db.query(`
+  SELECT COUNT(id) FROM posts;
+  `)
+}
+
 export function insertHashtagDB(hashtag) {
   return db.query(
     `
