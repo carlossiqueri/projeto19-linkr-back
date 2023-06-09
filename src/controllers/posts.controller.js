@@ -56,9 +56,13 @@ export async function newPost(req, res) {
 
 export async function timeline(req, res) {
   const { username } = res.locals.user;
+  const {page} = req.query;
+  
+ const newLimit = page * 10;
+
 
   try {
-    const timelinePosts = await getPostsDB();
+    const timelinePosts = await getPostsDB(newLimit);
 
     // verifica se o usuario logado deu like em alguma das postagens
 

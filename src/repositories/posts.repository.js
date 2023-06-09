@@ -16,7 +16,7 @@ export function createPost(url, description, user_id, urlMeta, url_picture) {
   );
 }
 
-export function getPostsDB() {
+export function getPostsDB(newLimit) {
   return db.query(
     `
     SELECT
@@ -40,9 +40,9 @@ export function getPostsDB() {
     users ON users.id = posts.user_id
   ORDER BY
     posts.id DESC
-  LIMIT 20;
+  LIMIT $1;
 `
-  );
+  , [newLimit]);
 }
 
 
