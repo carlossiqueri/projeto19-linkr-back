@@ -8,6 +8,8 @@ import {
   deletePost,
   deleteLikes,
   deleteHashtags,
+  insertComment,
+  getAllComments,
   getNumberOfPostsDB,
 } from "../repositories/posts.repository.js";
 import urlMetadata from "url-metadata";
@@ -50,6 +52,8 @@ export async function newPost(req, res) {
 
     res.status(201).send(result);
   } catch (err) {
+    console.log("cheguei aqui");
+    console.log(err);
     res.status(500).send(err);
   }
 }
@@ -161,3 +165,26 @@ export async function updatePostById(req, res) {
     res.status(500).send(err.message);
   }
 }
+
+export async function postComment(req, res) {
+  try {
+    await insertComment(req.body);
+
+    res.sendStatus(201);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
+
+export async function getComments(req, res) {
+  const { postId } = req.params;
+
+  try {
+    const comments = await getAllComments(postId);
+
+    res.send(comments.rows);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};
+

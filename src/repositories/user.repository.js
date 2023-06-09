@@ -72,11 +72,10 @@ export function ListPostsUser(id) {
   JOIN
     users ON users.id = posts.user_id
   WHERE
-    user_id = ${id}
+    user_id = $1
   ORDER BY
     posts.id DESC
-  LIMIT 20;
-    `
+  LIMIT 20;`, [id]
   );
 }
 

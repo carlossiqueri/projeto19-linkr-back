@@ -77,28 +77,75 @@ export function getHashtagsDB() {
   `);
 }
 
-export function deleteHashtags(post_id){
-  return db.query(`
+export function deleteHashtags(post_id) {
+  return db.query(
+    `
   DELETE FROM posts_hashtags WHERE "post_id"=$1;
-  `, [post_id]);
+  `,
+    [post_id]
+  );
 }
 
-export function deleteLikes(post_id){
-  return db.query(`
+export function deleteLikes(post_id) {
+  return db.query(
+    `
  DELETE FROM likes WHERE "post_id"=$1;
-  `,[post_id]);
+  `,
+    [post_id]
+  );
 }
 
-export function deletePost(id, user_id){
- 
-  return db.query(`
+export function deletePost(id, user_id) {
+  return db.query(
+    `
   DELETE FROM posts WHERE id=$1 AND "user_id"=$2;
-  `, [id, user_id]);
+  `,
+    [id, user_id]
+  );
 }
 
-export function updatePost( description, id, user_id){
-  return db.query(`
+export function updatePost(description, id, user_id) {
+  return db.query(
+    `
   UPDATE posts SET description=$1
   WHERE id=$2 AND "user_id"=$3;
-  `, [ description, id, user_id]);
+  `,
+    [description, id, user_id]
+  );
+}
+
+export function insertComment({ content, user_id, post_id }) {
+  return db.query(
+    `
+    INSERT INTO
+      comments(content, user_id, post_id)
+    VALUES
+      ($1, $2, $3)
+    ;
+  `,
+    [content, user_id, post_id]
+  );
+}
+
+export function getAllComments(post_id) {
+  const result = db.query(
+    `
+    SELECT
+      u.username,
+      u.picture_url,
+      c.content
+    FROM
+      users u
+    JOIN
+      comments c
+    ON
+      u.id = c.user_id
+    WHERE
+      c.post_id = $1
+    ;
+  `,
+    [post_id]
+  );
+
+  return result;
 }
