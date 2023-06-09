@@ -4,10 +4,12 @@ import { db } from "../config/database.js";
 export async function validateAuth(req, res, next){
     const { authorization } = req.headers;
     const token = authorization?.replace("Bearer ", "");
+   
     if(!token) return res.sendStatus(401);
 
     try{
         const sessions = await findSession(token);
+        
         if(sessions.rowCount === 0) return res.sendStatus(401);
 
         const { rows: users } = await db.query(`
@@ -16,7 +18,7 @@ export async function validateAuth(req, res, next){
 
 
         res.locals.user = users[0]
-        console.log(res.locals.user);
+        
         next();
     } catch(err){
         res.status(500).send(err.message);

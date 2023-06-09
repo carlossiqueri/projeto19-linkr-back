@@ -85,6 +85,7 @@ export async function timeline(req, res) {
       }
     }
 
+
     res.status(200).send(timelinePosts.rows);
   } catch (err) {
     res.status(500).send(err.message);
@@ -205,6 +206,7 @@ export async function reposts(req, res){
       await startRepost(id, user_id);
       return res.sendStatus(201);
     }
+    return res.sendStatus(201);
     
   } catch(err){
     res.status(500).send(err.message);

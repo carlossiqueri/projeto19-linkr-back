@@ -33,7 +33,12 @@ export function getPostsDB(newLimit) {
       SELECT COUNT(*)
       FROM likes
       WHERE likes.post_id = posts.id
-    ) AS like_count
+    ) AS like_count,
+    (
+      SELECT COUNT(*)
+      FROM reposts
+      WHERE reposts.post_id = posts.id
+    ) AS reposts_count
   FROM
     posts
   JOIN

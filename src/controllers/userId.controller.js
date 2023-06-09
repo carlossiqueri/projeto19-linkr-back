@@ -2,7 +2,7 @@ import { ListPostsUser, ListSearch } from "../repositories/user.repository.js";
 
 export async function userId(req, res) {
   const id = req.params.id;
-
+  
   try {
     const result = await ListPostsUser(id);
     res.status(201).send(result.rows);
