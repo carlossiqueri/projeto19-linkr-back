@@ -1,12 +1,16 @@
-import { createPost,
+import {
+  createPost,
   updatePost,
   getHashtagsDB,
   getPostsDB,
   insertHashtagDB,
   insert_posts_hashtagsDB,
-  deletePost, 
+  deletePost,
   deleteLikes,
-  deleteHashtags} from "../repositories/posts.repository.js";
+  deleteHashtags,
+  insertComment,
+  getAllComments,
+} from "../repositories/posts.repository.js";
 import urlMetadata from "url-metadata";
 import fetch from "node-fetch";
 import { db } from "../config/database.js";
@@ -47,12 +51,14 @@ export async function newPost(req, res) {
 
     res.status(201).send(result);
   } catch (err) {
+    console.log("cheguei aqui");
+    console.log(err);
     res.status(500).send(err);
   }
 }
 
 export async function timeline(req, res) {
-  const { username } = res.locals.user
+  const { username } = res.locals.user;
 
   try {
     const timelinePosts = await getPostsDB();
@@ -61,7 +67,11 @@ export async function timeline(req, res) {
 
     for (let i = 0; i < timelinePosts.rows.length; i++) {
       const obj = timelinePosts.rows[i];
-      if (obj.liked_by && Array.isArray(obj.liked_by) && obj.liked_by.includes(username)) {
+      if (
+        obj.liked_by &&
+        Array.isArray(obj.liked_by) &&
+        obj.liked_by.includes(username)
+      ) {
         obj.isLiked = true;
       } else {
         obj.isLiked = false;
@@ -85,61 +95,84 @@ export async function getTimelineHashtags(req, res) {
 }
 
 export async function likePost(req, res) {
-  const { id: user_id } = res.locals.user
-  const { id } = req.params
+  const { id: user_id } = res.locals.user;
+  const { id } = req.params;
 
   try {
-
-    const isFollowing = await db.query(`
+    const isFollowing = await db.query(
+      `
             SELECT * FROM likes WHERE "user_id" = $1 AND "post_id" = $2
-        `, [user_id, id])
+        `,
+      [user_id, id]
+    );
 
-        if(isFollowing.rowCount < 1) {
-            await db.query(`
+    if (isFollowing.rowCount < 1) {
+      await db.query(
+        `
             INSERT INTO likes ("user_id", "post_id") VALUES ($1, $2)
-            `, [user_id, id])
+            `,
+        [user_id, id]
+      );
 
-            return res.sendStatus(201)
-        }
+      return res.sendStatus(201);
+    }
 
-        await db.query(`
+    await db.query(
+      `
           DELETE FROM likes WHERE "user_id" = $1 AND "post_id" = $2
-        `, [user_id, id])
-
+        `,
+      [user_id, id]
+    );
   } catch (err) {
     res.status(500).send(err.message);
   }
-
 }
 
+export async function deletePostById(req, res) {
+  const { id: post_id } = req.params;
+  const { id: user_id } = res.locals.user;
 
-export async function deletePostById(req, res){
-  const {id: post_id} = req.params;
-  const {id: user_id} = res.locals.user;
-
-  
-  try{
+  try {
     await deleteHashtags(post_id);
     await deleteLikes(post_id);
     await deletePost(post_id, user_id);
     res.sendStatus(204);
-
-  }catch(err){
+  } catch (err) {
     res.status(500).send(err.message);
   }
 }
 
-export async function updatePostById(req, res){
-  const {id} = req.params;
-  const {id :user_id} = res.locals.user;
+export async function updatePostById(req, res) {
+  const { id } = req.params;
+  const { id: user_id } = res.locals.user;
   const { description } = req.body;
 
-  try{
-    await updatePost( description, id, user_id);
+  try {
+    await updatePost(description, id, user_id);
     res.sendStatus(200);
-
-  } catch(err){
+  } catch (err) {
     res.status(500).send(err.message);
   }
 }
 
+export async function postComment(req, res) {
+  try {
+    await insertComment(req.body);
+
+    res.sendStatus(201);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
+
+export async function getComments(req, res) {
+  const { postId } = req.params;
+
+  try {
+    const comments = await getAllComments(postId);
+
+    res.send(comments.rows);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}

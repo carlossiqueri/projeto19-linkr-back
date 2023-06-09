@@ -54,13 +54,13 @@ export function ListPostsUser(id) {
     `
       SELECT users.username, users.picture_url, posts.description, posts.url
       FROM users
-      JOIN posts ON users.id = posts.user_id
+      LEFT JOIN posts ON users.id = posts.user_id
       WHERE users.id = ${id};
     `
-  ); 
+  );
 }
 
-export function ListSearch(searchValue){
+export function ListSearch(searchValue) {
   return db.query(
     `
     SELECT id, username, picture_url
@@ -69,5 +69,5 @@ export function ListSearch(searchValue){
     ORDER BY RANDOM()
     LIMIT 10;
     `
-  )
+  );
 }
