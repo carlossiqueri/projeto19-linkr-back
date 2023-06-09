@@ -52,15 +52,34 @@ export function insertUser({ email, password, username, picture_url }) {
 export function ListPostsUser(id) {
   return db.query(
     `
-      SELECT users.username, users.picture_url, posts.description, posts.url
+    SELECT
+    posts.*,
+    (
+      SELECT ARRAY_AGG(users.username)
       FROM users
-      JOIN posts ON users.id = posts.user_id
-      WHERE users.id = ${id};
-    `
-  ); 
+      JOIN likes ON users.id = likes.user_id
+      WHERE likes.post_id = posts.id
+    ) AS liked_by,
+    users.username,
+    users.picture_url AS user_picture,
+    (
+      SELECT COUNT(*)
+      FROM likes
+      WHERE likes.post_id = posts.id
+    ) AS like_count
+  FROM
+    posts
+  JOIN
+    users ON users.id = posts.user_id
+  WHERE
+    user_id = $1
+  ORDER BY
+    posts.id DESC
+  LIMIT 20;`, [id]
+  );
 }
 
-export function ListSearch(searchValue){
+export function ListSearch(searchValue) {
   return db.query(
     `
     SELECT id, username, picture_url
@@ -69,5 +88,5 @@ export function ListSearch(searchValue){
     ORDER BY RANDOM()
     LIMIT 10;
     `
-  )
+  );
 }
