@@ -26,6 +26,7 @@ export async function signIn(req, res) {
   try {
     const { email, password } = req.user;
     const userByEmail = await findUserByEmail(email);
+   
 
     if (!userByEmail.rowCount) return res.sendStatus(401);
 
@@ -35,6 +36,7 @@ export async function signIn(req, res) {
     );
 
     if (!passwordAreCorrect) {
+      
       return res.sendStatus(401);
     }
 
